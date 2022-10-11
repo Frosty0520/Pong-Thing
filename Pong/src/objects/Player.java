@@ -22,7 +22,8 @@ public class Player {
 		score = 0;
 	} //end of default constructor
 	
-	//getters and setters
+	/*getters and setters*/
+	
 	public Rectangle getPlayer() {
 		return this.playerRect;
 	} //end of getPlayer method
@@ -47,7 +48,8 @@ public class Player {
 		this.score = newScore;
 	} //end of setScore method
 	
-	//top and bottom edges of player
+	/*getting the bounds of the player rectangle*/
+	
 	private float getPlayerTop() {
 		return playerRect.getY();
 	} //end of getPlayerTop method
@@ -56,7 +58,8 @@ public class Player {
 		return playerRect.getY() + playerRect.getHeight();
 	} //end of getPlayerBottom method
 	
-	//movement
+	/*movement code*/
+	
 	public void moveUp() {
 		playerRect.setCenterY(playerRect.getCenterY() - speed);
 	} //end of moveUp method
@@ -65,7 +68,8 @@ public class Player {
 		playerRect.setCenterY(playerRect.getCenterY() + speed);
 	} //end of moveDown method
 	
-	//collision with top and bottom of screen
+	/*collision with screen boundaries*/
+	
 	public boolean collidesScreenTop() {
 		if(getPlayerTop() < 0) {
 			return true;

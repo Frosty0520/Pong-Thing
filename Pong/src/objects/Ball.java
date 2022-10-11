@@ -28,7 +28,8 @@ public class Ball {
 		ballCirc = new Circle(250, 250, 15);
 	} //end of default constructor
 	
-	//getters and setters
+	/*getters and setters*/
+	
 	public Circle getBall() {
 		return this.ballCirc;
 	} //end of getBall method
@@ -45,7 +46,6 @@ public class Ball {
 		return this.speedX;
 	} //end of getSpeedX method
 
-	//movement code
 	public int getDirectionX() {
 		return this.directionX;
 	} //end of getDirectionX method
@@ -62,7 +62,8 @@ public class Ball {
 		this.directionY = directionY;
 	} //end of setDirectionY method
 	
-	//collision with screen edges
+	/*collision with screen boundaries*/
+	
 	public boolean hitsScreenTop() {
 		if(getTopEdge() < 0) {
 			return true;
@@ -91,7 +92,8 @@ public class Ball {
 		return false;
 	} //end of hitsScreenLeft method
 	
-	//collision with player
+	/*collision with player*/
+	
 	public boolean collidesTop(Player p) {
 		Rectangle player = p.getPlayer();
 		if(ballCirc.getCenterY() < player.getCenterY() && ballCirc.intersects(player)) {
@@ -107,6 +109,16 @@ public class Ball {
 		} 
 		return false;
 	} //end of collidesBottom method
+	
+	public boolean collidesMiddle(Player p) {
+		Rectangle player = p.getPlayer();
+		if(ballCirc.getCenterY() == player.getCenterY() && ballCirc.intersects(player)) {
+			return true;
+		}
+		return false;
+	} //end of collidesMiddle method
+	
+	/*getting the bounds of the ball*/
 	
 	//left and right edges off ball
 	private float getRightEdge() {
@@ -126,7 +138,8 @@ public class Ball {
 		return ballCirc.getY() + ballCirc.getRadius()*2;
 	} //end of getBottomEdge method
 	
-	//movement code
+	/*movement code*/
+	
 	public void move() {
 		ballCirc.setCenterX(ballCirc.getCenterX() + speedX * directionX);
 		ballCirc.setCenterY(ballCirc.getCenterY() + speedY * directionY);
