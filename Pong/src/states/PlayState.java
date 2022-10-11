@@ -14,107 +14,127 @@ import objects.Player;
 public class PlayState extends BasicGameState {
 	
 	Input input;
-	Ball b;
-	Player p;
-	Player p1, p2;
+	Ball ball;
+	Player genericPlayer;
+	Player player1, player2;
 	Player[] players;
 	
 	public void init(GameContainer window, StateBasedGame sbg) throws SlickException {
 		input = window.getInput();
-		b = new Ball();
-		p = new Player();
-		p1 = new Player();
-		p2 = new Player();
-		p1.getPlayer().setLocation(20, GUI.SCREEN_HEIGHT/2);
-		p2.getPlayer().setLocation(GUI.SCREEN_WIDTH - p2.getPlayer().getWidth() - 20, GUI.SCREEN_HEIGHT/2);
-		players = new Player[] {p1, p2};
+		ball = new Ball();
+		genericPlayer = new Player();
+		player1 = new Player();
+		player2 = new Player();
+		player1.getPlayer().setLocation(20, GUI.SCREEN_HEIGHT/2 - 50);
+		player2.getPlayer().setLocation(GUI.SCREEN_WIDTH - player2.getPlayer().getWidth() - 20, GUI.SCREEN_HEIGHT/2 - 50);
+		players = new Player[] {player1, player2};
 	} //end of init method
 	
 	public void update(GameContainer window, StateBasedGame sbg, int delta) throws SlickException {
 		
+		//pause the game
 		if(input.isKeyPressed(Input.KEY_ESCAPE)) {
+			//enter a pause state
 			sbg.enterState(2);
 		}
 		
-		//constantly move ball
-		b.move();
+		//ball is constantly moving
+		ball.move();
 		
 		//collision with right and left edges
-		if(b.hitsScreenRight()) {
-			p1.setScore(p1.getScore() + 1);
-			b.setDirectionX(-1);
+		if(ball.hitsScreenRight()) {
+			//player 1 gets a point and the direction is switched
+			player1.setScore(player1.getScore() + 1);
+			ball.setDirectionX(-1);
 		} 
-		else if(b.hitsScreenLeft()) {
-			p2.setScore(p2.getScore() + 1);
-			b.setDirectionX(1);
+		else if(ball.hitsScreenLeft()) {
+			//player 2 gets a point and the direction is switched
+			player2.setScore(player2.getScore() + 1);
+			ball.setDirectionX(1);
 		} 
 		
 		//collision with top and bottom edges
-		if(b.hitsScreenTop()) {
-			b.setDirectionY(1);
+		if(ball.hitsScreenTop()) {
+			ball.setDirectionY(1);
 		} 
-		else if(b.hitsScreenBottom()) {
-			b.setDirectionY(-1);
+		else if(ball.hitsScreenBottom()) {
+			ball.setDirectionY(-1);
 		} 
 		
-		//player movement
+		//player 1 movement
 		if(input.isKeyDown(Input.KEY_W)) {
-			p1.moveUp();
+			player1.moveUp();
 		} 
 		
 		if(input.isKeyDown(Input.KEY_S)) {
-			p1.moveDown();
+			player1.moveDown();
 		} 
 		
+		//player 2 movement
 		if(input.isKeyDown(Input.KEY_UP)) {
-			p2.moveUp();
+			player2.moveUp();
 		} 
 		
 		if(input.isKeyDown(Input.KEY_DOWN)) {
-			p2.moveDown();
+			player2.moveDown();
 		} 
 		
-		//check collision with player and switch directions accordingly
+		/*check collision with player and switch directions accordingly*/
+		
 		for(Player p : players) {
-			//collision with player
-			if(b.collidesTop(p)) {
-				switch(b.getDirectionX()) {
+			if(ball.collidesTop(p)) {
+				//change direction on x axis and make the ball move upward
+				switch(ball.getDirectionX()) {
 				case -1:
-					b.setDirectionX(1);
-					b.setDirectionY(-1);
+					ball.setDirectionX(1);
+					ball.setDirectionY(-1);
 					break;
 				case 1:
-					b.setDirectionX(-1);
-					b.setDirectionY(-1);
+					ball.setDirectionX(-1);
+					ball.setDirectionY(-1);
 					break;
 				} //end of switch
-			} 
-			else if(b.collidesBottom(p)) {
-				switch(b.getDirectionX()) {
+			}
+			else if(ball.collidesBottom(p)) {
+				//change direction on x axis and make the ball move downward
+				switch(ball.getDirectionX()) {
 				case -1:
-					b.setDirectionX(1);
-					b.setDirectionY(1);
+					ball.setDirectionX(1);
+					ball.setDirectionY(1);
 					break;
 				case 1:
-					b.setDirectionX(-1);
-					b.setDirectionY(1);
+					ball.setDirectionX(-1);
+					ball.setDirectionY(1);
 					break;
 				} //end of switch
-			} 
+			}
+			else if(ball.collidesMiddle(p)) {
+				//change direction on x axis and ball doesn't move on y axis
+				switch(ball.getDirectionX()) {
+				case -1:
+					ball.setDirectionX(1);
+					ball.setDirectionY(0);
+					break;
+				case 1:
+					ball.setDirectionX(-1);
+					ball.setDirectionY(0);
+					break;
+				}
+			}
 		} //end of player loop
 	} //end of update method
 	
 	public void render(GameContainer window, StateBasedGame sbg, Graphics g) throws SlickException {
-		g.setColor(b.getColor());
-		g.fill(b.getBall());
-		g.setColor(p.getColor());
+		g.setColor(ball.getColor());
+		g.fill(ball.getBall());
+		g.setColor(genericPlayer.getColor());
 		for(Player p : players) {
 			g.fill(p.getPlayer());
 		} //end of player loop
 		
-		g.setColor(p.getScoreColor());
-		g.drawString("" + p1.getScore(), 125, 25);
-		g.drawString("" + p2.getScore(), GUI.SCREEN_WIDTH - 125, 25);
+		g.setColor(genericPlayer.getScoreColor());
+		g.drawString("" + player1.getScore(), 125, 25);
+		g.drawString("" + player2.getScore(), GUI.SCREEN_WIDTH - 125, 25);
 	} //end of render method
 
 	public int getID() {
